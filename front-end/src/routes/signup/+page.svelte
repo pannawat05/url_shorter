@@ -8,7 +8,7 @@
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
 
-    const response = await fetch(`${PUBLIC_API_URL}signup`, {
+    const response = await fetch(`/api/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

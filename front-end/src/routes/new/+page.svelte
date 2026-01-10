@@ -45,7 +45,7 @@
     isLoading = true;
 
     try {
-      const response = await fetch(`${PUBLIC_API_URL}shorturl`, {
+      const response = await fetch(`/api/shorturl`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

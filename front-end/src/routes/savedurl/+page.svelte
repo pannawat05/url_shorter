@@ -144,12 +144,12 @@
                                 <td class="px-6 py-4 font-medium text-blue-600 whitespace-nowrap">
                                     <div style="display: flex;">
                                     <a
-                                        href={`http://${hostname}:3000/${url.ssid}`}
+                                        href={`${PUBLIC_HOST}${url.ssid}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class="hover:underline flex items-center"
                                     >
-                                        <span class="mr-1">🔗</span> {host}/{url.ssid}
+                                        <span class="mr-1">🔗</span> {PUBLIC_HOST}{url.ssid}
                                     </a>
                                     <p>&nbsp;&nbsp;</p>
                                     <button
