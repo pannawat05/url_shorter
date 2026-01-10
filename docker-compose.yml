@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    container_name: urlshort-backend
+    restart: always
+    env_file:
+      - ./backend/.env
+    ports:
+      - "3000:3000"
+    networks:
+      - urlshort-net
+
+  frontend:
+    build: ./frontend
+    container_name: urlshort-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - urlshort-net
+
+networks:
+  urlshort-net:
+    driver: bridge
