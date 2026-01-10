@@ -41,7 +41,7 @@
 
         loading = true;
         try {
-            const res = await fetch(`${PUBLIC_API_URL}savedurls`, {
+            const res = await fetch(`/api/savedurls`, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
@@ -74,7 +74,7 @@
 
   async function deleteUrl(ssid: string) {
     try {
-      const res = await fetch(`${PUBLIC_API_URL}/savedurls/${ssid}`, {
+      const res = await fetch(`/api/savedurls/${ssid}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -144,12 +144,12 @@
                                 <td class="px-6 py-4 font-medium text-blue-600 whitespace-nowrap">
                                     <div style="display: flex;">
                                     <a
-                                        href={`http://${hostname}:3000/${url.ssid}`}
+                                        href={`${PUBLIC_HOST}${url.ssid}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class="hover:underline flex items-center"
                                     >
-                                        <span class="mr-1">🔗</span> {host}/{url.ssid}
+                                        <span class="mr-1">🔗</span> {PUBLIC_HOST}{url.ssid}
                                     </a>
                                     <p>&nbsp;&nbsp;</p>
                                     <button
