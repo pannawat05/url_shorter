@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   backend:
-    build: ./backend
+    build: ./back-end
     container_name: urlshort-backend
     restart: always
     env_file:
