@@ -14,7 +14,7 @@ import { PUBLIC_API_URL } from '$env/static/public';
     isLoading = true;
 
     try {
-      const response = await fetch(`${PUBLIC_API_URL}login`, {
+      const response = await fetch(`/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

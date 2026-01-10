@@ -41,7 +41,7 @@
 
         loading = true;
         try {
-            const res = await fetch(`${PUBLIC_API_URL}savedurls`, {
+            const res = await fetch(`/api/savedurls`, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
@@ -74,7 +74,7 @@
 
   async function deleteUrl(ssid: string) {
     try {
-      const res = await fetch(`${PUBLIC_API_URL}/savedurls/${ssid}`, {
+      const res = await fetch(`/api/savedurls/${ssid}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`,
