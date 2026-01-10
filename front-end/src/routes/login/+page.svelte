@@ -1,4 +1,6 @@
 <script lang="ts">
+import { PUBLIC_API_URL } from '$env/static/public';
+
  let errorMessage: string = '';
   let isLoading: boolean = false;
     let email: string = '';
@@ -12,7 +14,7 @@
     isLoading = true;
 
     try {
-      const response = await fetch(`${API_URL}/api/login`, {
+      const response = await fetch(`${PUBLIC_API_URL}login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

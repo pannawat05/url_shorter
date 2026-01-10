@@ -1,6 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import Nav from "$lib/components/Nav.svelte";
+    import { PUBLIC_API_URL } from '$env/static/public';
+    import { PUBLIC_HOST } from '$env/static/public';
 
 
     let token: string = "";
@@ -39,7 +41,7 @@
 
         loading = true;
         try {
-            const res = await fetch(`${API_URL}/api/savedurls`, {
+            const res = await fetch(`${PUBLIC_API_URL}savedurls`, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
@@ -72,7 +74,7 @@
 
   async function deleteUrl(ssid: string) {
     try {
-      const res = await fetch(`${API_URL}/api/savedurls/${ssid}`, {
+      const res = await fetch(`${PUBLIC_API_URL}/savedurls/${ssid}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -151,7 +153,7 @@
                                     </a>
                                     <p>&nbsp;&nbsp;</p>
                                     <button
-              on:click={() => copyToClipboard(`${hostname}:3000/${url.ssid}`)}
+              on:click={() => copyToClipboard(`${PUBLIC_HOST}/${url.ssid}`)}
               class="flex-shrink-0 p-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all duration-200 transform hover:scale-65 active:scale-70 shadow-lg"
               title="Copy to clipboard"
             >

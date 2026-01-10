@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import Nav from '$lib/components/Nav.svelte';
+  import { PUBLIC_API_URL } from '$env/static/public';
 
   let originalUrl = '';
   let shortenedUrl = '';
@@ -8,7 +9,7 @@
   let copied = false;
   let errorMessage = '';
   let focused = false;
-  const API_URL = import.meta.env.VITE_API_URL;
+ 
 
   let uid = '';
 
@@ -44,7 +45,7 @@
     isLoading = true;
 
     try {
-      const response = await fetch(`${API_URL}/shorturl`, {
+      const response = await fetch(`${PUBLIC_API_URL}shorturl`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

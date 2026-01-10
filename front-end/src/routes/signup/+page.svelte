@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { PUBLIC_API_URL } from '$env/static/public';
   let email: string = '';
   let password: string = '';
   let focused = '';
@@ -7,7 +8,7 @@
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
 
-    const response = await fetch(`${API_URL}/api/signup`, {
+    const response = await fetch(`${PUBLIC_API_URL}signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
