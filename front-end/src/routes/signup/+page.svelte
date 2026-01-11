@@ -18,7 +18,9 @@
 
     if (response.ok) {
       // Handle successful signup (e.g., redirect to login or dashboard)
+      alert('Signup successful!');
       console.log('Signup successful');
+      window.location.href = '/login';
     } else {
       // Handle errors (e.g., display error message)
       console.error('Signup failed');
