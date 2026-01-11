@@ -1,7 +1,7 @@
 services:
   backend:
     build:
-      context: ./backend
+      context: ./back-end
       dockerfile: Dockerfile
     image: url_shorter_backend
     container_name: urlshort-backend
@@ -22,7 +22,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ./front-end
       dockerfile: Dockerfile
     image: url_shorter_frontend
     container_name: urlshort-frontend
