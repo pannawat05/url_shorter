@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
 
   let isLogin = false;
+  let menuOpen = false;
 
   onMount(() => {
     isLogin = !!localStorage.getItem("authToken");
@@ -14,17 +15,43 @@
   }
 </script>
 
-<menu
-  class="bg-white p-4 rounded-xl shadow-md mb-6 flex flex-col items-center gap-4 md:flex-row  md:gap-250"
->
-<div class="title flex items-center gap-2">
-  <img  src="favicon.png" alt="Logo" class="w-15 h-15"/>
-  <h2 class="text-xl font-bold text-indigo-600">
-    UrlShortener
-  </h2>
+<menu class="bg-white p-4 rounded-xl shadow-md mb-6">
+  <!-- Top bar -->
+  <div class="flex items-center justify-between">
+    <!-- Logo -->
+    <div class="flex items-center gap-2">
+      <img src="favicon.png" alt="Logo" class="w-10 h-10" />
+      <h2 class="text-xl font-bold text-indigo-600">UrlShortener</h2>
+    </div>
+
+    <!-- Hamburger (mobile only) -->
+    <button
+      class="md:hidden text-gray-700 focus:outline-none"
+      on:click={() => (menuOpen = !menuOpen)}
+    >
+      <!-- icon -->
+      <svg
+        class="w-7 h-7"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M4 6h16M4 12h16M4 18h16"
+        />
+      </svg>
+    </button>
   </div>
 
-  <ul class="flex flex-col gap-5 md:flex-row md:gap-8 items-center">
+  <!-- Menu -->
+  <ul
+    class={`mt-4 flex flex-col gap-5 items-center
+      ${menuOpen ? "flex" : "hidden"}
+      md:flex md:flex-row md:gap-8 md:mt-0`}
+  >
     <li>
       <a href="/" class="font-medium text-gray-700 hover:text-indigo-600 transition">
         Home
@@ -37,11 +64,13 @@
       </a>
     </li>
 
-     <li>
-      <a href="/login" class="font-medium text-gray-700 hover:text-indigo-600 transition">
-       login
-      </a>
-    </li>
+    {#if !isLogin}
+      <li>
+        <a href="/login" class="font-medium text-gray-700 hover:text-indigo-600 transition">
+          Login
+        </a>
+      </li>
+    {/if}
 
     {#if isLogin}
       <li>
