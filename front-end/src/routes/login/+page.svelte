@@ -39,7 +39,7 @@ import { PUBLIC_API_URL } from '$env/static/public';
         
         alert('Login successful');
         // Redirect to dashboard or home page
-        window.location.href = '/savedurl';
+        window.location.href = '/';
       } else {
         // Handle error response from backend
         errorMessage = data.message || 'Login failed. Please try again.';
