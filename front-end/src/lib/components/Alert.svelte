@@ -1,32 +1,32 @@
-<script>
-    export let type = "success";
-    // success | error | warning | info
+<script lang="ts">
+    // props
+    export let type: "success" | "error" | "warning" | "info" = "info";
+    export let title = "";
+    export let message = "";
 
-    export let title = "Alert Title";
-    export let message = "Alert message here";
-    export let linkText = "";
-    export let linkHref = "#";
-
-    export let showActions = true;
-    export let okText = "Ok";
+    export let okText = "OK";
     export let cancelText = "Cancel";
 
-    export let onOk = () => {};
-    export let onCancel = () => {};
+    export let showActions = true;
+
+    // callbacks (no-op by default → SSR safe)
+    export let onOk: () => void = () => {};
+    export let onCancel: () => void = () => {};
 </script>
 
 <div class={`alert alert-soft alert-${type}`} role="alert">
-    <div>
-        <h3 class="font-semibold">{title}</h3>
+    <div class="flex flex-col gap-2">
+        {#if title}
+            <h3 class="font-semibold text-base">
+                {title}
+            </h3>
+        {/if}
 
-        <p class="mt-1">
-            {message}
-            {#if linkText}
-                <a href={linkHref} class="link link-primary font-semibold">
-                    {linkText}
-                </a>
-            {/if}
-        </p>
+        {#if message}
+            <p class="text-sm">
+                {message}
+            </p>
+        {/if}
     </div>
 
     {#if showActions}
