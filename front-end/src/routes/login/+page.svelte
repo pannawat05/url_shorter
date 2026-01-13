@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Alert from "./Alert.svelte";
+    import Alert from "$lib/components/Alert.svelte";
 
     let errorMessage = "";
     let successMessage = "";
@@ -69,7 +69,6 @@
     }
 </script>
 
-<!-- ALERT -->
 {#if showAlert}
     <div class="mb-6">
         <Alert
