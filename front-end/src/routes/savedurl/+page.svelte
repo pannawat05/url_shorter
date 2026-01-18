@@ -210,7 +210,10 @@
                                     <td class="px-6 py-4 text-center space-x-2">
                                         <button
                                             on:click={() =>
-                                                copyToClipboard(url.ssid)}
+                                                copyToClipboard(
+                                                    `http://shorturl.panplay-itgoeasy.xyz/${url.ssid}`,
+                                                    url.ssid,
+                                                )}
                                             class="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
                                         >
                                             {copiedSsid === url.ssid
