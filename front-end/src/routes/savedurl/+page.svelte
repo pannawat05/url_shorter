@@ -65,9 +65,27 @@
 
     function copyToClipboard(text: string, ssid: string) {
         try {
-            navigator.clipboard.writeText(
-                "http://shorturl.panplay-itgoeasy.xyz/" + ssid,
-            );
+            const url = `http://shorturl.panplay-itgoeasy.xyz/${ssid}`;
+
+            if (
+                typeof navigator !== "undefined" &&
+                navigator.clipboard &&
+                typeof navigator.clipboard.writeText === "function" &&
+                window.isSecureContext
+            ) {
+                navigator.clipboard.writeText(url);
+            } else {
+                // Fallback สำหรับ HTTP / mobile / browser เก่า
+                const textarea = document.createElement("textarea");
+                textarea.value = url;
+                textarea.style.position = "fixed";
+                textarea.style.opacity = "0";
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textarea);
+            }
 
             copiedSsid = ssid;
             setTimeout(() => (copiedSsid = null), 2000);
@@ -75,6 +93,7 @@
             console.error("Copy failed:", err);
         }
     }
+
     async function deleteUrl(ssid: string) {
         actionLoading = true;
 
