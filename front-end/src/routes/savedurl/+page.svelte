@@ -63,10 +63,29 @@
         }
     }
 
-    function copyToClipboard(ssid: string) {
-        navigator.clipboard.writeText(`${PUBLIC_HOST}/${ssid}`);
-        copiedSsid = ssid;
-        setTimeout(() => (copiedSsid = null), 2000);
+    function copyToClipboard(text: string) {
+        try {
+            // Modern API (ต้องมี + secure)
+            if (navigator?.clipboard?.writeText && window.isSecureContext) {
+                navigator.clipboard.writeText(text);
+            } else {
+                // Fallback (รองรับ HTTP / browser เก่า)
+                const textarea = document.createElement("textarea");
+                textarea.value = text;
+                textarea.style.position = "fixed";
+                textarea.style.opacity = "0";
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textarea);
+            }
+
+            copiedSsid = text;
+            setTimeout(() => (copiedSsid = null), 2000);
+        } catch (err) {
+            console.error("Copy failed:", err);
+        }
     }
 
     async function deleteUrl(ssid: string) {
