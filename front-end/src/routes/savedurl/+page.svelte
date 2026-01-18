@@ -104,6 +104,19 @@
             loading = false;
         }
     }
+
+    function handleOk() {
+        if (alertType === "success") {
+            showAlert = false;
+            goto("/");
+        } else {
+            showAlert = false;
+        }
+    }
+
+    function handleCancel() {
+        showAlert = false;
+    }
 </script>
 
 <svelte:head>
@@ -111,6 +124,42 @@
 </svelte:head>
 
 <Nav />
+
+<div
+    class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center p-4 relative overflow-hidden"
+>
+    <div class="absolute inset-0 overflow-hidden text-black">
+        <div
+            class="absolute -top-1/2 -left-1/2 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-pulse"
+        ></div>
+        <div
+            class="absolute -bottom-1/2 -right-1/2 w-96 h-96 bg-pink-300 rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-pulse"
+            style="animation-delay: 1s;"
+        ></div>
+    </div>
+
+    <div class="relative w-full max-w-md">
+        <div
+            class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl blur opacity-75 transition duration-1000"
+        ></div>
+        <div
+            class="relative bg-white rounded-2xl shadow-2xl p-8 backdrop-blur-sm"
+        >
+            {#if showAlert}
+                <div class="mb-6 transform transition-all duration-300">
+                    <Alert
+                        type={alertType}
+                        title={alertType === "success" ? "Success" : "Error"}
+                        message={alertType === "success"
+                            ? successMessage
+                            : errorMessage}
+                        okText="OK"
+                        cancelText="Close"
+                        onOk={handleOk}
+                        onCancel={handleCancel}
+                    />
+                </div>
+            {/if}
 
 <button
     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full float-end mr-25 mt-5"
