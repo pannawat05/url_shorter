@@ -71,7 +71,9 @@
                 typeof navigator.clipboard.writeText === "function" &&
                 window.isSecureContext
             ) {
-                navigator.clipboard.writeText(text);
+                navigator.clipboard.writeText(
+                    "http://shorturl.panplay-itgoeasy.xyz/" + text,
+                );
             } else {
                 const textarea = document.createElement("textarea");
                 textarea.value = text;
