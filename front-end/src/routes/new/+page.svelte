@@ -59,7 +59,6 @@
             if (!response.ok) {
                 throw new Error(data?.error || "Failed to shorten URL");
             }
-
             shortenedUrl = `http://shorturl.panplay-itgoeasy.xyz/${data.short_url}`;
         } catch (error) {
             console.error(error);
