@@ -60,7 +60,7 @@
                 throw new Error(data?.error || "Failed to shorten URL");
             }
 
-            shortenedUrl = `http://shorlurl.panplayitgoeasy.xyz/${data.short_url}`;
+            shortenedUrl = `http://shorturl.panplay-itgoeasy.xyz/${data.short_url}`;
         } catch (error) {
             console.error(error);
             errorMessage =
