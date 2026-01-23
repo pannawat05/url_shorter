@@ -59,17 +59,14 @@
             if (!response.ok) {
                 throw new Error(data?.error || "Failed to shorten URL");
             }
-            shortenedUrl = `http://shorturl.panplay-itgoeasy.xyz/${data.short_url}`;
-            console.log(shortenUrl);
-        } catch (error) {
-            console.error(error);
-            errorMessage =
-                (error instanceof Error ? error.message : String(error)) ||
-                "Network error";
-        } finally {
-            isLoading = false;
-        }
-    }
+
+            // ตรวจสอบว่า short_url เป็น full URL หรือแค่ code
+            if (data.short_url.startsWith('http')) {
+                shortenedUrl = data.short_url;
+            } else {
+                const shortCode = data.short_url.replace(/^\/+/, '');
+                shortenedUrl = `http://shorturl.panplay-itgoeasy.xyz/${shortCode}`;
+            }
 
     // ✅ แก้ไขฟังก์ชัน Copy ให้ทำงานได้ครอบคลุม
     function copyToClipboard(text: string) {
