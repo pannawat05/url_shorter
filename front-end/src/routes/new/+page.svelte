@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import Nav from "$lib/components/Nav.svelte";
-    import { PUBLIC_API_URL } from "$env/static/public";
 
     let originalUrl = "";
     let shortenedUrl = "";
@@ -9,16 +8,15 @@
     let copied = false;
     let errorMessage = "";
     let focused = false;
-
     let uid = "";
 
-    // ✅ safe for SSR
+    // safe for SSR
     onMount(() => {
         try {
             const user = localStorage.getItem("user");
             if (user) {
                 const parsed = JSON.parse(user);
-                uid = parsed?.id ?? null;
+                uid = parsed?.id ?? "";
             }
         } catch (err) {
             console.error("Invalid user in localStorage", err);
@@ -43,15 +41,13 @@
         isLoading = true;
 
         try {
-            const response = await fetch(`/api/shorturl`, {
+            const response = await fetch("/api/shorturl", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     original_url: originalUrl.trim(),
-                    user_id: uid,
-                }),
+                    user_id: uid
+                })
             });
 
             const data = await response.json();
@@ -60,16 +56,22 @@
                 throw new Error(data?.error || "Failed to shorten URL");
             }
 
-            // ตรวจสอบว่า short_url เป็น full URL หรือแค่ code
-            if (data.short_url.startsWith('http')) {
+            if (data.short_url.startsWith("http")) {
                 shortenedUrl = data.short_url;
             } else {
-                const shortCode = data.short_url.replace(/^\/+/, '');
-                 shortCode = String(data.short_url).trim();
+                const shortCode = String(data.short_url)
+                    .replace(/^\/+/, "")
+                    .trim();
+
                 shortenedUrl = `https://shorturl.panplay-itgoeasy.xyz/${shortCode}`;
             }
+        } catch (err: any) {
+            errorMessage = err.message || "Unexpected error";
+        } finally {
+            isLoading = false;
+        }
+    }
 
-    // ✅ แก้ไขฟังก์ชัน Copy ให้ทำงานได้ครอบคลุม
     function copyToClipboard(text: string) {
         if (!text) return;
 
@@ -79,19 +81,13 @@
                 navigator.clipboard &&
                 window.isSecureContext
             ) {
-                // วิธีมาตรฐานสำหรับ Modern Browser (HTTPS)
-                navigator.clipboard.writeText(text).then(() => {
-                    triggerCopyState();
-                });
+                navigator.clipboard.writeText(text).then(triggerCopyState);
             } else {
-                // Fallback สำหรับ HTTP หรือ Browser ที่ไม่รองรับ Clipboard API
                 const textarea = document.createElement("textarea");
                 textarea.value = text;
                 textarea.style.position = "fixed";
                 textarea.style.left = "-9999px";
-                textarea.style.top = "0";
                 document.body.appendChild(textarea);
-                textarea.focus();
                 textarea.select();
                 document.execCommand("copy");
                 document.body.removeChild(textarea);
@@ -114,6 +110,7 @@
         copied = false;
     }
 </script>
+
 
 <Nav />
 
