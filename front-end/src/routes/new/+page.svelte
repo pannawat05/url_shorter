@@ -46,8 +46,8 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     original_url: originalUrl.trim(),
-                    user_id: uid
-                })
+                    user_id: uid,
+                }),
             });
 
             const data = await response.json();
@@ -63,7 +63,7 @@
                     .replace(/^\/+/, "")
                     .trim();
 
-                shortenedUrl = `https://shorturl.panplay-itgoeasy.xyz/${shortCode}`;
+                shortenedUrl = `http://shorturl.panplay-itgoeasy.xyz/${shortCode}`;
             }
         } catch (err: any) {
             errorMessage = err.message || "Unexpected error";
@@ -110,7 +110,6 @@
         copied = false;
     }
 </script>
-
 
 <Nav />
 

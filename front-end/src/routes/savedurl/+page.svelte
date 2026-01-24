@@ -65,7 +65,7 @@
 
     function copyToClipboard(text: string, ssid: string) {
         try {
-            const url = `https://shorturl.panplay-itgoeasy.xyz/${ssid}`;
+            const url = `http://shorturl.panplay-itgoeasy.xyz/${ssid}`;
 
             if (
                 typeof navigator !== "undefined" &&

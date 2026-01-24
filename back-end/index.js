@@ -1,14 +1,18 @@
-const express = require('express');
-require('dotenv').config();
-const cors = require('cors');
-const { nanoid } = require('nanoid');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { MongoClient } = require('mongodb');
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import { nanoid } from "nanoid";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { MongoClient } from "mongodb";
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const domain = `${process.env.DOMAIN}:${port}` || `http://localhost:${port}`;
+const domain = process.env.DOMAIN
+  ? `${process.env.DOMAIN}:${port}`
+  : `http://localhost:${port}`;
 
 // ================= Middleware =================
 app.use(cors());
@@ -21,31 +25,31 @@ let db, urls, users;
 
 async function connectDB() {
   await client.connect();
-  db = client.db('urlshort');
-  urls = db.collection('urls');
-  users = db.collection('users');
 
-  // Index
+  db = client.db("urlshort");
+  urls = db.collection("urls");
+  users = db.collection("users");
+
   await urls.createIndex({ ssid: 1 }, { unique: true });
   await users.createIndex({ email: 1 }, { unique: true });
 
-  console.log('MongoDB connected');
+  console.log("MongoDB connected");
 }
 
-connectDB().catch(console.error);
+await connectDB();
 
 // ================= Create Short URL =================
-app.post('/api/shorturl', async (req, res) => {
+app.post("/api/shorturl", async (req, res) => {
   const { original_url, user_id } = req.body;
 
   if (!original_url) {
-    return res.status(400).json({ error: 'original_url is required' });
+    return res.status(400).json({ error: "original_url is required" });
   }
 
   try {
     new URL(original_url);
   } catch {
-    return res.status(400).json({ error: 'Invalid URL format' });
+    return res.status(400).json({ error: "Invalid URL format" });
   }
 
   try {
@@ -56,52 +60,48 @@ app.post('/api/shorturl', async (req, res) => {
       ssid,
       user_id: user_id || null,
       clicks: 0,
-      createdAt: new Date()
+      createdAt: new Date(),
     });
 
-    const short_url = `${domain}/${ssid}`;
-    res.json({ short_url });
+    res.json({ short_url: `${domain}/${ssid}` });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Database error' });
+    res.status(500).json({ error: "Database error" });
   }
 });
 
 // ================= Redirect =================
-app.get('/:ssid', async (req, res) => {
+app.get("/:ssid", async (req, res) => {
   const { ssid } = req.params;
 
   try {
     const url = await urls.findOne({ ssid });
 
     if (!url) {
-      return res.status(404).json({ error: 'No URL found for this SSID' });
+      return res.status(404).json({ error: "No URL found for this SSID" });
     }
 
-    await urls.updateOne(
-      { ssid },
-      { $inc: { clicks: 1 } }
-    );
+    await urls.updateOne({ ssid }, { $inc: { clicks: 1 } });
 
     res.redirect(url.original_url);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Database error' });
+    res.status(500).json({ error: "Database error" });
   }
 });
 
 // ================= Signup =================
-app.post('/api/signup', async (req, res) => {
+app.post("/api/signup", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required' });
+    return res.status(400).json({ error: "Email and password are required" });
   }
 
   try {
     const existingUser = await users.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ error: 'User with this email already exists' });
+      return res.status(409).json({ error: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -111,128 +111,108 @@ app.post('/api/signup', async (req, res) => {
       _id: id,
       email,
       password: hashedPassword,
-      createdAt: new Date()
+      createdAt: new Date(),
     });
 
-    const token = jwt.sign(
-      { id, email },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 3600000
+    const token = jwt.sign({ id, email }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
     });
 
     res.status(201).json({
-      message: 'User registered successfully',
+      message: "User registered successfully",
       user: { id, email },
-      token
+      token,
     });
   } catch (err) {
-    console.error('Signup error:', err);
-    res.status(500).json({ error: 'Server error during sign up' });
+    console.error("Signup error:", err);
+    res.status(500).json({ error: "Server error during sign up" });
   }
 });
 
 // ================= Login =================
-app.post('/api/login', async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required' });
+    return res.status(400).json({ error: "Email and password are required" });
   }
 
   try {
     const user = await users.findOne({ email });
     if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: "1h" },
     );
 
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 3600000
-    });
-
     res.json({
-      message: 'Login successful',
+      message: "Login successful",
       user: { id: user._id, email: user.email },
-      token
+      token,
     });
   } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ error: 'Server error during login' });
+    console.error("Login error:", err);
+    res.status(500).json({ error: "Server error during login" });
   }
 });
 
 // ================= Saved URLs =================
-app.get('/api/savedurls', async (req, res) => {
+app.get("/api/savedurls", async (req, res) => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Authorization header missing or malformed' });
+  if (!authHeader?.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const token = authHeader.split(' ')[1];
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
+    const token = authHeader.split(" ")[1];
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
 
     const savedUrls = await urls
-      .find({ user_id: userId })
+      .find({ user_id: id })
       .project({ original_url: 1, ssid: 1, _id: 0 })
       .toArray();
 
     res.json({ savedUrls });
-  } catch (err) {
-    console.error('Error fetching saved URLs:', err);
-    res.status(401).json({ error: 'Invalid or expired token' });
+  } catch {
+    res.status(401).json({ error: "Invalid or expired token" });
   }
 });
 
-app.delete('/api/savedurls/:ssid', async (req, res) => {
+app.delete("/api/savedurls/:ssid", async (req, res) => {
   const authHeader = req.headers.authorization;
-  const { ssid } = req.params;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Authorization header missing or malformed' });
+  if (!authHeader?.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const token = authHeader.split(' ')[1];
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
+    const token = authHeader.split(" ")[1];
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    const { ssid } = req.params;
 
-    const result = await urls.deleteOne({ ssid, user_id: userId });
+    const result = await urls.deleteOne({ ssid, user_id: id });
 
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ error: 'URL not found or not owned by user' });
+    if (!result.deletedCount) {
+      return res.status(404).json({ error: "URL not found" });
     }
 
-    res.json({ message: 'URL deleted successfully' });
-  } catch (err) {
-    console.error('Error deleting saved URL:', err);
-    res.status(401).json({ error: 'Invalid or expired token' });
+    res.json({ message: "URL deleted successfully" });
+  } catch {
+    res.status(401).json({ error: "Invalid or expired token" });
   }
 });
 
 // ================= Start Server =================
 app.listen(port, () => {
-  console.log(`URL Shortener service running at http://localhost:${port}`);
+  console.log(`🚀 URL Shortener running on ${domain}`);
 });
