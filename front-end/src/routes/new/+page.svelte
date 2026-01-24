@@ -65,7 +65,7 @@
                 shortenedUrl = data.short_url;
             } else {
                 const shortCode = data.short_url.replace(/^\/+/, '');
-                const shortCode = String(data.short_url).trim();
+                 shortCode = String(data.short_url).trim();
                 shortenedUrl = `https://shorturl.panplay-itgoeasy.xyz/${shortCode}`;
             }
 
