@@ -66,7 +66,7 @@
             } else {
                 const shortCode = data.short_url.replace(/^\/+/, '');
                 const shortCode = String(data.short_url).trim();
-                shortenedUrl = `http://shorturl.panplay-itgoeasy.xyz/${shortCode}`;
+                shortenedUrl = `https://shorturl.panplay-itgoeasy.xyz/${shortCode}`;
             }
 
     // ✅ แก้ไขฟังก์ชัน Copy ให้ทำงานได้ครอบคลุม
