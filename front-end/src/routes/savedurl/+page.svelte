@@ -65,7 +65,7 @@
 
     function copyToClipboard(text: string, ssid: string) {
         try {
-            const url = `http://shorturl.panplay-itgoeasy.xyz/${ssid}`;
+            const url = `http://shorturl.panplay-itgoeasy.xyz/s/${ssid}`;
 
             if (
                 typeof navigator !== "undefined" &&
@@ -197,7 +197,7 @@
                                             target="_blank"
                                             class="hover:underline"
                                         >
-                                            {PUBLIC_HOST}/{url.ssid}
+                                            {PUBLIC_HOST}/s/{url.ssid}
                                         </a>
                                     </td>
 
@@ -211,7 +211,7 @@
                                         <button
                                             on:click={() =>
                                                 copyToClipboard(
-                                                    `http://shorturl.panplay-itgoeasy.xyz/${url.ssid}`,
+                                                    `http://shorturl.panplay-itgoeasy.xyz/s/${url.ssid}`,
                                                     url.ssid,
                                                 )}
                                             class="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
