@@ -193,7 +193,7 @@
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="px-6 py-4 text-blue-600">
                                         <a
-                                            href={`${PUBLIC_HOST}/${url.ssid}`}
+                                            href={`${PUBLIC_HOST}/s/${url.ssid}`}
                                             target="_blank"
                                             class="hover:underline"
                                         >
