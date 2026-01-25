@@ -71,7 +71,7 @@ app.post("/api/shorturl", async (req, res) => {
 });
 
 // ================= Redirect =================
-app.get("/:ssid", async (req, res) => {
+app.get("/s/:ssid", async (req, res) => {
   const { ssid } = req.params;
 
   try {
